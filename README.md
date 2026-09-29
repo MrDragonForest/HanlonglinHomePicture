@@ -116,8 +116,12 @@ key 就是照片 id（`日期/文件名`）。两个脚本都**不会覆盖**这
    git push -u origin main
    ```
 
-2. 仓库需要是**公开**的 —— GitHub Free 不支持从私有仓库发布 Pages。若还没开 Pages，工作流里的 `configure-pages` 会自动把它启用并设为 GitHub Actions 源，一般不用手动设置（必要时也可自己去 **Settings → Pages → Source** 选 **GitHub Actions**）。
-3. 等 Actions 跑完，站点地址：
+2. 仓库需要是**公开**的 —— GitHub Free 不支持从私有仓库发布 Pages。
+3. **手动启用一次 Pages**：**Settings → Pages → Build and deployment → Source** 选 **GitHub Actions**，然后 Save。
+
+   这一步不能省。工作流里的 `configure-pages` 带了 `enablement: true`，但 Actions 的 `GITHUB_TOKEN` 无权创建 Pages 站点（实测报 `Create Pages site failed: Resource not accessible by integration`），仓库没开过 Pages 时会直接卡在这一步。开过之后它是幂等的，后续跑不会再要求你操作。
+
+4. 等 Actions 跑完，站点地址：
 
    - 普通仓库（项目页）：`https://<用户名>.github.io/<仓库名>/`
    - 用户主页仓库（仓库名形如 `<用户名>.github.io`）：`https://<用户名>.github.io/`
