@@ -1,10 +1,146 @@
 {
-  "generatedAt": "2026-09-29T12:52:28.269Z",
-  "count": 24,
+  "generatedAt": "2026-09-29T13:55:14.647Z",
+  "count": 28,
   "dates": [
-    "2026-09-14"
+    "2026-09-14",
+    "2026-09-13"
   ],
   "photos": [
+    {
+      "id": "2026-09-14/mtxx_20260914_175554548",
+      "album": "我们的小日子",
+      "date": "2026-09-14",
+      "takenAt": "2026-09-14T17:55:54",
+      "src": "photos/2026-09-14/mtxx_20260914_175554548-1440.webp",
+      "thumb": "photos/2026-09-14/mtxx_20260914_175554548-420.webp",
+      "ladder": [
+        {
+          "w": 420,
+          "src": "photos/2026-09-14/mtxx_20260914_175554548-420.webp",
+          "bytes": 18756
+        },
+        {
+          "w": 640,
+          "src": "photos/2026-09-14/mtxx_20260914_175554548-640.webp",
+          "bytes": 34280
+        },
+        {
+          "w": 960,
+          "src": "photos/2026-09-14/mtxx_20260914_175554548-960.webp",
+          "bytes": 56984
+        },
+        {
+          "w": 1440,
+          "src": "photos/2026-09-14/mtxx_20260914_175554548-1440.webp",
+          "bytes": 109564
+        }
+      ],
+      "width": 2160,
+      "height": 2880,
+      "aspect": 0.75,
+      "orientation": "portrait",
+      "bytes": 219584,
+      "lqip": "data:image/webp;base64,UklGRmYCAABXRUJQVlA4WAoAAAAgAAAAEQAAFwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggeAAAAFAFAJ0BKhIAGAA/CXSwUaumpKKwGAgBcCEJZQDDNBDtJ/dMffzlLrdvhsP/SbX3samVAAD+5xMt7B8fkt+LWC1f4fEizyAe+ATnSOcE5173mNsSeo4MAeFbLOy8Ew8UFhPLounw8fxu1KeUakoxEuoaOhtJCGQAAA==",
+      "color": "#958a85",
+      "camera": null,
+      "exif": {
+        "lens": null,
+        "focal": null,
+        "aperture": null,
+        "shutter": null,
+        "iso": null
+      }
+    },
+    {
+      "id": "2026-09-14/img_20260914_155724",
+      "album": "我们的小日子",
+      "date": "2026-09-14",
+      "takenAt": "2026-09-14T15:57:24",
+      "src": "photos/2026-09-14/img_20260914_155724-1440.webp",
+      "thumb": "photos/2026-09-14/img_20260914_155724-420.webp",
+      "ladder": [
+        {
+          "w": 420,
+          "src": "photos/2026-09-14/img_20260914_155724-420.webp",
+          "bytes": 19506
+        },
+        {
+          "w": 640,
+          "src": "photos/2026-09-14/img_20260914_155724-640.webp",
+          "bytes": 36208
+        },
+        {
+          "w": 960,
+          "src": "photos/2026-09-14/img_20260914_155724-960.webp",
+          "bytes": 72104
+        },
+        {
+          "w": 1440,
+          "src": "photos/2026-09-14/img_20260914_155724-1440.webp",
+          "bytes": 124120
+        }
+      ],
+      "width": 3072,
+      "height": 4096,
+      "aspect": 0.75,
+      "orientation": "portrait",
+      "bytes": 251938,
+      "lqip": "data:image/webp;base64,UklGRowCAABXRUJQVlA4WAoAAAAgAAAAEQAAFwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggngAAABAFAJ0BKhIAGAA/CXy1VKunpKMoCAFwIQlAF2ACNyk5gmV8SxyqRqNgv1rE28ohMwAA/rOxKPYZO2Hr9Ee/Aw6UD3eTdz8Vdc98hxGBLlHPd4aQ9XqoQMcEuU3Ax5mZzey8PYKrjR7Z3JN64IkDna/m1+n8RSKYsLmoDnoNrqqWbu+CK0QTqqye7L21a8FT5IrORWAB4djINIqPwAAA",
+      "color": "#9a9b9a",
+      "camera": "Xiaomi 17",
+      "exif": {
+        "lens": null,
+        "focal": "3mm",
+        "aperture": "f/2.2",
+        "shutter": "1/114s",
+        "iso": "ISO 50"
+      }
+    },
+    {
+      "id": "2026-09-14/mtxx_20260914_131754897",
+      "album": "我们的小日子",
+      "date": "2026-09-14",
+      "takenAt": "2026-09-14T13:17:55",
+      "src": "photos/2026-09-14/mtxx_20260914_131754897-1440.webp",
+      "thumb": "photos/2026-09-14/mtxx_20260914_131754897-420.webp",
+      "ladder": [
+        {
+          "w": 420,
+          "src": "photos/2026-09-14/mtxx_20260914_131754897-420.webp",
+          "bytes": 9852
+        },
+        {
+          "w": 640,
+          "src": "photos/2026-09-14/mtxx_20260914_131754897-640.webp",
+          "bytes": 16426
+        },
+        {
+          "w": 960,
+          "src": "photos/2026-09-14/mtxx_20260914_131754897-960.webp",
+          "bytes": 27796
+        },
+        {
+          "w": 1440,
+          "src": "photos/2026-09-14/mtxx_20260914_131754897-1440.webp",
+          "bytes": 56752
+        }
+      ],
+      "width": 2160,
+      "height": 2880,
+      "aspect": 0.75,
+      "orientation": "portrait",
+      "bytes": 110826,
+      "lqip": "data:image/webp;base64,UklGRnoCAABXRUJQVlA4WAoAAAAgAAAAEQAAFwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggjAAAALAEAJ0BKhIAGAA/CWqxT6ulpKIwGAwBcCEJYwDGfAkZ8ZGosPEBw3zFFTv4CoAA/FUTNOC8wjS5y2E2dLnzQJtPlkYsN+O+YsGPymVrDIZoiSwkhpRIEu/hnDeSCgCgMYtdqfmEawpYIt5mTWdAQWKRGaaYE8cDV9W1M8SCh4JU7PoSZEXwIczBSAAA",
+      "color": "#635a56",
+      "camera": null,
+      "exif": {
+        "lens": null,
+        "focal": null,
+        "aperture": null,
+        "shutter": null,
+        "iso": null
+      }
+    },
     {
       "id": "2026-09-14/160A6311",
       "album": "我们的 2026",
@@ -1098,6 +1234,51 @@
         "aperture": "f/4",
         "shutter": "1/160s",
         "iso": "ISO 200"
+      }
+    },
+    {
+      "id": "2026-09-13/mtxx_20260913_175415545",
+      "album": "我们的小日子",
+      "date": "2026-09-13",
+      "takenAt": "2026-09-13T17:54:15",
+      "src": "photos/2026-09-13/mtxx_20260913_175415545-1440.webp",
+      "thumb": "photos/2026-09-13/mtxx_20260913_175415545-420.webp",
+      "ladder": [
+        {
+          "w": 420,
+          "src": "photos/2026-09-13/mtxx_20260913_175415545-420.webp",
+          "bytes": 15166
+        },
+        {
+          "w": 640,
+          "src": "photos/2026-09-13/mtxx_20260913_175415545-640.webp",
+          "bytes": 29024
+        },
+        {
+          "w": 960,
+          "src": "photos/2026-09-13/mtxx_20260913_175415545-960.webp",
+          "bytes": 50470
+        },
+        {
+          "w": 1440,
+          "src": "photos/2026-09-13/mtxx_20260913_175415545-1440.webp",
+          "bytes": 100446
+        }
+      ],
+      "width": 2160,
+      "height": 2880,
+      "aspect": 0.75,
+      "orientation": "portrait",
+      "bytes": 195106,
+      "lqip": "data:image/webp;base64,UklGRmACAABXRUJQVlA4WAoAAAAgAAAAEQAAFwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcgAAAPAEAJ0BKhIAGAA/CXKwUaumpKKwGAgBcCEJZwDIXBDvkWYng7ondo0T0O78BMYjOAD+ru/vmTLDWPjR3cK0LsUEajTEPrrUqo6yX254e8ipOsbfJ9tg7GVu+3UNQX4rpLw88pURbRduE8AwlEsyLAAAAA==",
+      "color": "#83807f",
+      "camera": null,
+      "exif": {
+        "lens": null,
+        "focal": null,
+        "aperture": null,
+        "shutter": null,
+        "iso": null
       }
     }
   ]
