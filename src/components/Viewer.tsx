@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { PhotoView } from '../types'
-import { assetUrl, formatDateLong, neighbours } from '../lib/photos'
+import { formatDateLong, neighbours, srcSet } from '../lib/photos'
 import { site } from '../data/site.config'
 import { tileRegistry } from '../lib/tileRegistry'
 import { SmartImage } from './SmartImage'
@@ -227,8 +227,18 @@ export function Viewer({ photos, index, reducedMotion, onIndexChange, onClose }:
   /* --- 预加载前后几张，翻页不用等 --- */
   useEffect(() => {
     for (const p of neighbours(index, 2)) {
-      const img = new Image()
-      img.src = assetUrl(p.src)
+      // 预热的是「网格给这张图挑中的那一档」，不是最大一档：
+      // 查看器外框宽度和网格格子宽度几乎相同，会挑到同一档，
+      // 所以预热它才是真的预热了查看器要的那张图（预热最大档会白下一份）。
+      const thumb = tileRegistry
+        .get(p.id)
+        ?.querySelector<HTMLImageElement>('img.smart__full')
+      const url = thumb?.currentSrc
+      // currentSrc 为空说明这张图还没开始加载（在屏幕外被 lazy 挡着），
+      // 那就不预热，等它自己进视口
+      if (!url || thumb.complete) continue
+      const pre = new Image()
+      pre.src = url
     }
   }, [index])
 
@@ -364,9 +374,13 @@ export function Viewer({ photos, index, reducedMotion, onIndexChange, onClose }:
                 >
                   <SmartImage
                     photo={photo}
-                    src={assetUrl(photo.src)}
+                    src={photo.src}
+                    srcSet={srcSet(photo)}
+                    // 用实测的外框宽度当 sizes（而不是 vw）：
+                    // 外框宽度和网格格子宽度几乎相同，这样浏览器会挑到和网格
+                    // 已经下载过的那一档，点开详情不用再等一次网络。
+                    sizes={box ? `${Math.round(box.w)}px` : undefined}
                     alt={photo.title || photo.caption || `拍摄于 ${photo.date} 的照片`}
-                    sizes="96vw"
                     priority
                   />
                 </motion.div>

@@ -4,6 +4,8 @@ import type { PhotoView } from '../types'
 export interface SmartImageProps {
   photo: PhotoView
   src: string
+  /** 多档衍生图，交给浏览器按 sizes 自己挑一档，避免在高密度屏上被拉伸 */
+  srcSet?: string
   alt: string
   className?: string
   sizes?: string
@@ -22,6 +24,7 @@ export interface SmartImageProps {
 export function SmartImage({
   photo,
   src,
+  srcSet,
   alt,
   className,
   sizes,
@@ -51,6 +54,7 @@ export function SmartImage({
         ref={imgRef}
         className="smart__full"
         src={src}
+        srcSet={srcSet}
         alt={alt}
         sizes={sizes}
         loading={priority ? 'eager' : 'lazy'}

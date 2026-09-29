@@ -1,10 +1,17 @@
 /**
  * 浏览器端把原始照片压成网页用的图片。
- * 逻辑和 scripts/build-photos.mjs 对齐：同样的长边限制、同样的画质、同样按拍摄日期分目录。
+ * 逻辑和 scripts/build-photos.mjs 对齐：同样的宽度档位、同样的画质、同样按拍摄日期分目录。
  */
 import exifr from 'exifr'
-import { buildPhotoRecord, toLocalParts } from '../shared/photoMeta.mjs'
+import { buildPhotoRecord, classify, toLocalParts } from '../shared/photoMeta.mjs'
 import type { PhotoExif } from '../types'
+
+/** 还没上传的一档衍生图：blob 在内存里，w 是它的真实像素宽度 */
+export interface PreparedRung {
+  /** 这一档的真实像素宽度 */
+  w: number
+  blob: Blob
+}
 
 export interface Prepared {
   key: string
@@ -17,24 +24,27 @@ export interface Prepared {
   height: number
   color: string
   lqip: string
-  view: { blob: Blob; ext: string }
-  thumb: { blob: Blob; ext: string }
+  rungs: PreparedRung[]
+  ext: string
   record: Record<string, unknown>
   meta: { camera: string | null; exif: PhotoExif }
 }
 
 export interface OutputSettings {
-  viewEdge: number
-  thumbEdge: number
-  viewQuality: number
-  thumbQuality: number
+  /** 按宽度排的档位，前端用 srcset 让浏览器自己挑，和本地脚本保持一致 */
+  ladder: number[]
+  /** 横图多一档（全屏查看器里宽度会撑开） */
+  wideLadder: number[]
+  /** 全景图是整行铺满，再多一档更宽的 */
+  panoramaLadder: number[]
+  quality: number
 }
 
 export const defaultOutput: OutputSettings = {
-  viewEdge: 1920,
-  thumbEdge: 560,
-  viewQuality: 0.82,
-  thumbQuality: 0.74,
+  ladder: [420, 640, 960, 1440],
+  wideLadder: [420, 640, 960, 1440, 1920],
+  panoramaLadder: [420, 960, 1440, 2880],
+  quality: 0.76,
 }
 
 const EXIF_FIELDS = [
@@ -236,20 +246,29 @@ export async function prepare(file: File, options: PrepareOptions): Promise<Prep
   const slug = uniqueSlug(relDir, file.name, options.takenIds)
   const id = `${relDir}/${slug}`
 
-  const longestEdge = Math.max(width, height)
   const { ext } = pickEncoder()
+  const longestEdge = Math.max(width, height)
 
-  const viewCanvas = drawScaled(bitmap, orientation, Math.min(1, options.viewEdge / longestEdge))
-  const thumbCanvas = drawScaled(
-    bitmap,
-    orientation,
-    Math.min(1, options.thumbEdge / longestEdge)
+  // 和本地脚本一样按「宽度」出档位；源图比档位还窄时不放大，
+  // 于是几档可能算出同一个宽度，去重后避免上传几份一样的文件
+  const shape = classify(width / height)
+  const widths = [
+    ...new Set(
+      (shape === 'panorama'
+        ? options.panoramaLadder
+        : shape === 'landscape'
+          ? options.wideLadder
+          : options.ladder
+      ).map((w) => Math.min(w, width))
+    ),
+  ]
+
+  const rungs: PreparedRung[] = await Promise.all(
+    widths.map(async (w) => {
+      const canvas = drawScaled(bitmap, orientation, w / width)
+      return { w: canvas.width, blob: await toBlob(canvas, options.quality) }
+    })
   )
-
-  const [viewBlob, thumbBlob] = await Promise.all([
-    toBlob(viewCanvas, options.viewQuality),
-    toBlob(thumbCanvas, options.thumbQuality),
-  ])
 
   const { lqip, color } = makeLqip(bitmap, orientation, width, height)
 
@@ -260,16 +279,18 @@ export async function prepare(file: File, options: PrepareOptions): Promise<Prep
   bitmap.close()
 
   const dir = `${options.photoDir.replace(/\/+$/, '')}/${relDir}`
+  const LADDER = rungs.map((r) => ({
+    w: r.w,
+    src: `${dir}/${slug}-${r.w}.${ext}`,
+    bytes: r.blob.size,
+  }))
   const record = buildPhotoRecord({
     id,
     album: options.album,
     taken,
     width,
     height,
-    viewPath: `${dir}/${slug}-view.${ext}`,
-    thumbPath: `${dir}/${slug}-thumb.${ext}`,
-    viewBytes: viewBlob.size,
-    thumbBytes: thumbBlob.size,
+    ladder: LADDER,
     lqip,
     color,
     exif,
@@ -287,8 +308,8 @@ export async function prepare(file: File, options: PrepareOptions): Promise<Prep
     height,
     color,
     lqip,
-    view: { blob: viewBlob, ext },
-    thumb: { blob: thumbBlob, ext },
+    rungs,
+    ext,
     record,
     meta: { camera: record.camera as string | null, exif: exifOut },
   }

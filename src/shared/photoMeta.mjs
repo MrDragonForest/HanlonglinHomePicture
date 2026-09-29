@@ -64,34 +64,40 @@ export function formatExposure(seconds) {
   return `1/${Math.round(1 / seconds)}s`
 }
 
-/** 由宽高和 EXIF 拼出清单里那条记录（不含文案） */
+/**
+ * 由宽高和 EXIF 拼出清单里那条记录（不含文案）。
+ *
+ * ladder 是按宽度升序排好的衍生图数组：[{ w, src, bytes }]。
+ * 前端把它展开成 srcset，让浏览器按屏幕密度自己挑一档。
+ */
 export function buildPhotoRecord({
   id,
   album,
   taken,
   width,
   height,
-  viewPath,
-  thumbPath,
-  viewBytes,
-  thumbBytes,
+  ladder,
   lqip,
   color,
   exif,
 }) {
   const aspect = width / height
+  const largest = ladder[ladder.length - 1]
   return {
     id,
     album,
     date: taken.date,
     takenAt: `${taken.date}T${taken.time}`,
-    src: viewPath,
-    thumb: thumbPath,
+    // src 指最大一档：查看器、相邻预加载都直接用它
+    src: largest.src,
+    // thumb 指最小一档：胶片条这类只需要缩略图的地方用
+    thumb: ladder[0].src,
+    ladder,
     width,
     height,
     aspect: Number(aspect.toFixed(4)),
     orientation: classify(aspect),
-    bytes: viewBytes + thumbBytes,
+    bytes: ladder.reduce((n, t) => n + t.bytes, 0),
     lqip,
     color,
     camera: formatCamera(exif.Make, exif.Model),

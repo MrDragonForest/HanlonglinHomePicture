@@ -22,16 +22,20 @@ export interface RawExif {
   ISO?: number | null
 }
 
+export interface Rung {
+  /** 文件真实像素宽度，直接当 srcset 的 w 描述符 */
+  w: number
+  src: string
+  bytes: number
+}
+
 export declare function buildPhotoRecord(input: {
   id: string
   album: string
   taken: Parts
   width: number
   height: number
-  viewPath: string
-  thumbPath: string
-  viewBytes: number
-  thumbBytes: number
+  ladder: Rung[]
   lqip: string
   color: string
   exif: RawExif

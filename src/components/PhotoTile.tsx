@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import type { PhotoView } from '../types'
 import { site } from '../data/site.config'
 import { SmartImage } from './SmartImage'
-import { assetUrl } from '../lib/photos'
+import { srcSet, tileSizes } from '../lib/photos'
 import { tileRegistry } from '../lib/tileRegistry'
 
 interface Props {
@@ -47,8 +47,9 @@ export function PhotoTile({ photo, onOpen, priority }: Props) {
       >
         <SmartImage
           photo={photo}
-          src={assetUrl(photo.thumb)}
-          sizes="(max-width: 660px) 92vw, (max-width: 1080px) 46vw, 30vw"
+          src={photo.thumb}
+          srcSet={srcSet(photo)}
+          sizes={tileSizes(photo.orientation)}
           alt={caption || `拍摄于 ${photo.date} 的照片`}
           priority={priority}
         />

@@ -14,7 +14,7 @@ export interface RepoConfig {
 }
 
 export interface CommitFile {
-  /** 仓库里的完整路径，例如 public/photos/2026-09-14/xxx-view.webp */
+  /** 仓库里的完整路径，例如 public/photos/2026-09-14/xxx-960.webp */
   path: string
   /** 文件内容，base64（不带 data URL 前缀） */
   base64: string

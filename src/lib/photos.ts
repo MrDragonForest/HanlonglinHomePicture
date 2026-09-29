@@ -1,4 +1,11 @@
-import type { Manifest, CaptionMap, PhotoView, DayGroup } from '../types'
+import type {
+  Manifest,
+  CaptionMap,
+  Photo,
+  PhotoView,
+  DayGroup,
+  Orientation,
+} from '../types'
 import manifestRaw from '../data/photos.json'
 import captionsRaw from '../data/captions.json'
 
@@ -26,6 +33,39 @@ export const photos: PhotoView[] = manifest.photos.map((p, index) => {
     location: cap.location?.trim() ?? '',
   }
 })
+
+/**
+ * 把衍生图阶梯展开成 srcset。
+ * w 描述符用的是文件真实像素宽度，浏览器据此挑一档，
+ * 保证挑到的那一档宽度 ≥ 当前的 CSS 宽度 × 设备像素比，也就是不放大。
+ */
+export function srcSet(photo: Photo): string {
+  return photo.ladder.map((r) => `${assetUrl(r.src)} ${r.w}w`).join(', ')
+}
+
+/**
+ * 网格格子的 sizes。
+ *
+ * 断点必须和 useLayout 的 useColumnCount 对齐（最小列宽 380，最多 4 列），
+ * 百分比则按内容宽度反推出来，和 gallery.css 的 --shell / --gutter / --gap 一致：
+ *   < 760 → 1 列，列宽 = 90vw
+ *   760–1139 → 2 列，列宽 = (90vw − 1.8vw) / 2 ≈ 44.1vw
+ *   1140–1519 → 3 列，列宽 = (90vw − 3.6vw) / 3 ≈ 28.8vw
+ *   ≥ 1520 → 4 列，宽度由外壳上限 1560 决定，列宽固定 335px
+ *
+ * 这里必须尽量准：sizes 偏大会让浏览器挑到高一档的图（白下载几十 KB），
+ * 偏小则会挑到糊的。写死百分比是因为改动列数/间距时这里也要跟着改一次，
+ * 所以下面这段注释要一起改。
+ */
+const TILE_SIZES =
+  '(max-width: 759px) 90vw, (max-width: 1139px) 44vw, (max-width: 1519px) 29vw, 335px'
+
+/** 全景图在排版里独占一整行，宽度就是内容宽度 */
+const PANORAMA_SIZES = '(max-width: 1559px) 90vw, 1416px'
+
+export function tileSizes(orientation: Orientation): string {
+  return orientation === 'panorama' ? PANORAMA_SIZES : TILE_SIZES
+}
 
 export const photoCount = photos.length
 export const manifestGeneratedAt = manifest.generatedAt

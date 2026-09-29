@@ -8,14 +8,24 @@ export interface PhotoExif {
   iso: string | null
 }
 
+/** 衍生图阶梯里的一档，w 是文件的真实像素宽度，直接当 srcset 的 w 描述符用 */
+export interface Rung {
+  w: number
+  src: string
+  bytes: number
+}
+
 /** 由 scripts/build-photos.mjs 生成的图片信息，全部是客观数据 */
 export interface Photo {
   id: string
   album: string
   date: string
   takenAt: string
+  /** 最大一档，查看器用 */
   src: string
+  /** 最小一档，只需要缩略图的地方用 */
   thumb: string
+  ladder: Rung[]
   width: number
   height: number
   aspect: number

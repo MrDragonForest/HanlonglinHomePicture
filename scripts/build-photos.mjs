@@ -7,7 +7,7 @@
  *
  * 做的事情：
  *   1. 读 EXIF 拍摄时间（拿不到就用文件时间），按 YYYY-MM-DD 分目录
- *   2. 生成 thumb / view 两档 WebP（长边限制，自动按 EXIF 摆正方向）
+ *   2. 按宽度生成一条 WebP 阶梯，前端用 srcset 让浏览器自己挑（自动按 EXIF 摆正方向）
  *   3. 生成 24px 的 LQIP 模糊占位图 + 主色调，内联进清单
  *   4. 按宽高比归类 portrait / square / landscape / panorama，供前端排版
  *   5. 写 src/data/photos.json
@@ -24,6 +24,7 @@ import exifr from 'exifr'
 import { config } from './photos.config.mjs'
 import {
   buildPhotoRecord,
+  classify,
   toLocalParts,
 } from '../src/shared/photoMeta.mjs'
 
@@ -75,27 +76,41 @@ async function processOne(buf, meta, exif, taken, baseName, album) {
   await mkdir(outDirAbs, { recursive: true })
 
   const slug = baseName.replace(/\.[^.]+$/, '')
-  const derivatives = {}
+  const orientation = classify(aspect)
 
-  for (const [key, edge] of Object.entries(config.sizes)) {
-    const fileName = `${slug}-${key}.webp`
+  // 全景整行铺满、横图在全屏查看器里宽度会撑开，各需要不同的档位（见 photos.config.mjs）
+  const widths =
+    orientation === 'panorama'
+      ? config.panoramaLadder
+      : orientation === 'landscape'
+        ? config.wideLadder
+        : config.ladder
+  const ladder = []
+
+  for (const width of widths) {
+    const fileName = `${slug}-${width}.webp`
     const abs = path.join(outDirAbs, fileName)
     const rel = `${config.outDir.replace(/^public\//, '')}/${relDir}/${fileName}`
 
     if (!FORCE && existsSync(abs)) {
-      derivatives[key] = { src: rel, bytes: (await stat(abs)).size }
+      // 已存在就只读一下真实宽度：srcset 的 w 描述符必须是文件的真实宽度，
+      // 不能拿「期望宽度」凑 —— 窄图会被 withoutEnlargement 拦下，缩不到那么宽。
+      const meta2 = await sharp(abs).metadata()
+      ladder.push({ w: meta2.width, src: rel, bytes: (await stat(abs)).size })
       continue
     }
 
     const out = await sharp(buf)
       .rotate() // 按 EXIF 摆正
-      .resize({ width: edge, height: edge, fit: 'inside', withoutEnlargement: true })
-      .webp({ quality: config.quality[key], effort: 5 })
-      .toBuffer()
+      .resize({ width, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: config.quality, effort: 5 })
+      .toBuffer({ resolveWithObject: true })
 
-    await writeFile(abs, out)
-    derivatives[key] = { src: rel, bytes: out.length }
+    await writeFile(abs, out.data)
+    ladder.push({ w: out.info.width, src: rel, bytes: out.data.length })
   }
+
+  ladder.sort((a, b) => a.w - b.w)
 
   // LQIP 模糊占位：24px，内联 base64 直接进清单，实现「先模糊色块、后清晰」
   const lqipBuf = await sharp(buf)
@@ -117,10 +132,7 @@ async function processOne(buf, meta, exif, taken, baseName, album) {
     taken,
     width: srcW,
     height: srcH,
-    viewPath: derivatives.view.src,
-    thumbPath: derivatives.thumb.src,
-    viewBytes: derivatives.view.bytes,
-    thumbBytes: derivatives.thumb.bytes,
+    ladder,
     lqip: `data:image/webp;base64,${lqipBuf.toString('base64')}`,
     color: dominantHex,
     exif,

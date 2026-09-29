@@ -80,7 +80,8 @@ export function AdminPage() {
   const totalBytes = useMemo(
     () =>
       ready.reduce(
-        (n, it) => n + (it.prepared?.view.blob.size ?? 0) + (it.prepared?.thumb.blob.size ?? 0),
+        (n, it) =>
+          n + (it.prepared?.rungs.reduce((s, r) => s + r.blob.size, 0) ?? 0),
         0
       ),
     [ready]
@@ -189,28 +190,29 @@ export function AdminPage() {
       }
 
       setStatusLine(`压缩包已就绪，开始上传 ${ready.length} 张…`)
-      setProgress({ done: 0, total: ready.length * 2 + 2 })
+      const uploadCount = ready.reduce((n, it) => n + it.prepared!.rungs.length, 0)
+      setProgress({ done: 0, total: uploadCount + 2 })
 
       const files = []
       let done = 0
       for (const item of ready) {
         const p = item.prepared!
-        const [viewB64, thumbB64] = await Promise.all([
-          blobToBase64(p.view.blob),
-          blobToBase64(p.thumb.blob),
-        ])
         const dir = `${repoDir}/${p.taken.date}`
-        files.push({ path: `${dir}/${p.slug}-view.${p.view.ext}`, base64: viewB64 })
-        files.push({ path: `${dir}/${p.slug}-thumb.${p.thumb.ext}`, base64: thumbB64 })
-        done += 2
-        setProgress({ done, total: ready.length * 2 + 2 })
+        for (const rung of p.rungs) {
+          files.push({
+            path: `${dir}/${p.slug}-${rung.w}.${p.ext}`,
+            base64: await blobToBase64(rung.blob),
+          })
+          done += 1
+          setProgress({ done, total: uploadCount + 2 })
+        }
       }
 
       files.push({
         path: MANIFEST_PATH,
         base64: textToBase64(JSON.stringify(nextManifest, null, 2) + '\n'),
       })
-      setProgress({ done: done + 1, total: ready.length * 2 + 2 })
+      setProgress({ done: done + 1, total: uploadCount + 2 })
       files.push({
         path: CAPTIONS_PATH,
         base64: textToBase64(JSON.stringify(nextCaptions, null, 2) + '\n'),
@@ -364,7 +366,7 @@ export function AdminPage() {
         </span>
         <p className="dropzone__main">点击选择，或把照片拖进来</p>
         <p className="dropzone__sub">
-          可一次选多张。浏览器会先压到 {defaultOutput.viewEdge}px 再上传，并按拍摄日期自动分目录。
+          可一次选多张。浏览器会按 {defaultOutput.ladder.join(' / ')}px 出一套多档图再上传（前端用 srcset 按屏幕密度自己挑），并按拍摄日期自动分目录。
         </p>
       </section>
 
@@ -419,7 +421,7 @@ export function AdminPage() {
                         </span>
                         <span>
                           {formatBytes(
-                            item.prepared.view.blob.size + item.prepared.thumb.blob.size
+                            item.prepared.rungs.reduce((s, r) => s + r.blob.size, 0)
                           )}
                         </span>
                         {item.prepared.meta.camera && <span>{item.prepared.meta.camera}</span>}
