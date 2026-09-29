@@ -4,12 +4,15 @@ import { Gallery } from './components/Gallery'
 import { Viewer } from './components/Viewer'
 import { ThemeSwitch } from './components/ThemeSwitch'
 import { MusicPlayer } from './components/MusicPlayer'
+import { AutoTourButton } from './components/AutoTourButton'
 import { AdminPage } from './admin/AdminPage'
 import { useHashRoute } from './hooks/useHashRoute'
 import { useTheme, usePrefersReducedMotion } from './hooks/useTheme'
+import { useAutoTour } from './hooks/useAutoTour'
 import { photos, photoCount } from './lib/photos'
 import { site } from './data/site.config'
 
+import './styles/fonts.css'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/hero.css'
@@ -29,11 +32,27 @@ function AlbumPage() {
   const reducedMotion = usePrefersReducedMotion()
   const [viewerIndex, setViewerIndex] = useState<number | null>(null)
 
+  const {
+    supported: tourSupported,
+    running: tourRunning,
+    toggle: toggleTour,
+    stop: stopTour,
+  } = useAutoTour({
+    dwellMs: site.autoTour.dwellMs,
+    scrollTimeoutMs: site.autoTour.scrollTimeoutMs,
+    reducedMotion,
+  })
+
   // 查看器打开时锁住背景滚动
   useEffect(() => {
     document.body.classList.toggle('is-locked', viewerIndex !== null)
     return () => document.body.classList.remove('is-locked')
   }, [viewerIndex])
+
+  // 全屏看图的时候不该有人在背后继续滚页面
+  useEffect(() => {
+    if (viewerIndex !== null) stopTour()
+  }, [viewerIndex, stopTour])
 
   if (photoCount === 0) {
     return (
@@ -57,6 +76,9 @@ function AlbumPage() {
       <div className="grain" aria-hidden="true" />
       <ThemeSwitch theme={theme} onToggle={toggle} />
       <MusicPlayer />
+      {tourSupported && viewerIndex === null && (
+        <AutoTourButton running={tourRunning} onToggle={toggleTour} />
+      )}
 
       <Hero />
       <Gallery onOpen={setViewerIndex} />

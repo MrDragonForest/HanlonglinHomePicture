@@ -11,6 +11,7 @@
 - **可选背景音乐**：往 `src/assets/music/` 丢音频文件即自动出现在播放列表，一首都不放则不显示控件。
 - **两种加图方式**：本地脚本批量处理（处理相机原图）或网页后台直传（在浏览器里压缩后提交到 GitHub）。
 - **键盘 / 手势翻页**：查看器里支持 ← → 方向键、Esc 关闭、左右滑动切换、下滑关闭。
+- **手机上的「自动浏览」**：左下角一个开关（默认关闭），点开后像有人替你慢慢往下翻 —— 每张停 5 秒再滑到下一张。只在触屏 / 窄屏出现，你自己一碰就立刻让位。
 
 ## 快速开始
 
@@ -96,6 +97,7 @@ key 就是照片 id（`日期/文件名`）。两个脚本都**不会覆盖**这
 - 音乐自动播放、音量、淡入淡出时长
 - 网格每列的最小宽度（浏览器据此决定一行放几张，默认 380）
 - 全屏查看器里是否显示底部胶片条
+- 自动浏览的停留时长（`autoTour.dwellMs`，默认 5000 毫秒）
 
 ## 背景音乐
 
@@ -165,7 +167,9 @@ src/
     useLayout.ts        最短列网格算法、列数断点、进场触发
     useTheme.ts         主题读写与持久化
     useHashRoute.ts     hash 路由（#/admin）
-  components/           Hero / Gallery / PhotoTile / SmartImage / Viewer / Filmstrip / MusicPlayer / ThemeSwitch
+    useAutoTour.ts      手机端自动浏览：预取下一张，再平滑滚过去
+  assets/fonts/         自托管的 Cormorant Garamond（可变字体，latin 子集）
+  components/           Hero / Gallery / PhotoTile / SmartImage / Viewer / Filmstrip / MusicPlayer / ThemeSwitch / AutoTourButton
   admin/                后台页面（压缩 + GitHub 提交）
   styles/               CSS（主题变量 + 各区块样式）
 ```
@@ -182,6 +186,8 @@ Vite 6 + React 18 + TypeScript，动画用 Framer Motion，图片处理用 sharp
 - **多档图 + `srcset` 解决高密度屏发糊**。清单里每张照片带一条按宽度递增的阶梯，网格和查看器都用同一条阶梯、各自的 `sizes`：
   - 网格的 `sizes` 在 `src/lib/photos.ts` 的 `TILE_SIZES`，百分比是按 `gallery.css` 的 `--shell / --gutter / --gap` 反推出来的，**改列数或间距时要一起改**，否则 `sizes` 会偏大（白下载高一档）或偏小（又糊了）。
   - 查看器的 `sizes` 用 JS 实测的外框宽度（`box.w`）。外框宽度和网格格子宽度几乎相同，所以浏览器会挑到和网格已经下载过的**同一档**，点开详情不用再等一次网络。
+- **字体自托管，`index.html` 里没有任何外链样式表**。原先用 `<link>` 引 `fonts.googleapis.com` 的 CSS，那是**渲染阻塞**资源：该域名不可达时（国内很常见）浏览器会一直挂在那儿等，整页白屏直到超时 —— 实测 FCP 永远不来，24 个格子一个都不渲染。现在 Cormorant Garamond 放在 `src/assets/fonts/`，由 `src/styles/fonts.css` 用 `@font-face` 声明。它是可变字体，正体 / 斜体各一个文件、合计 77 KB，`font-weight: 300 700` 一个声明覆盖全部字重；只含 latin 子集，中文本来就由 `--font-display` 回退栈里的系统宋体渲染，不用下载。别再把 Google Fonts 的 `<link>` 加回来。
+- **自动浏览靠「先预取、再滚动」绕开 `loading="lazy"` 的死锁**（`src/hooks/useAutoTour.ts`）。网格是懒加载的，视口外很远的图压根不会开始下载，所以「等它加载完再滚过去」会永远等下去。做法是用 `new Image()` 带上同一份 `srcset` / `sizes` 主动取一次（`sizes` 用这一格的真实像素宽度，保证挑中和格子同一档，不多下一份也不白下高一档），借浏览器缓存把「已加载」变成既成事实，然后才平滑滚过去。等平滑滚动结束没用 `scrollend`（Safari 支持得晚），而是逐帧看 `scrollY` 是否连续 8 帧静止；另外马赛克分列后 DOM 顺序和视觉顺序不一致，起点必须按实际纵坐标重排，否则会在一列里来回跳。
 
 ## 已知限制
 

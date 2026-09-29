@@ -36,4 +36,12 @@ export const site = {
 
   /** 全屏查看器里是否显示底部胶片条 */
   filmstrip: true,
+
+  /** 手机上的「自动浏览」：等下一张加载完，再平滑滚过去 */
+  autoTour: {
+    /** 每张滑到位之后停留多久（毫秒） */
+    dwellMs: 5000,
+    /** 等平滑滚动停下来的兜底上限（毫秒）。正常靠逐帧观察 scrollY 判断结束，这个只是防止卡死 */
+    scrollTimeoutMs: 4000,
+  },
 } as const

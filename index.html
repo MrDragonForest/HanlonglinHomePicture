@@ -14,15 +14,9 @@
     />
 
     <!--
-      拉丁文与数字使用优雅的衬线体（Cormorant Garamond），中文优先使用系统宋体。
-      字体加载失败也不影响观感 —— 回退栈本身就是宋体。
+      字体自托管（见 src/styles/fonts.css）。这里刻意不引外链样式表：
+      fonts.googleapis.com 是渲染阻塞资源，不可达时整页白屏。
     -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
-    />
 
     <script>
       // 在首帧之前套用主题，避免深色主题下出现白色闪屏

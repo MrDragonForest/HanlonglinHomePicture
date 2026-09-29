@@ -58,6 +58,7 @@ export function SmartImage({
         alt={alt}
         sizes={sizes}
         loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"
         draggable={false}
         onLoad={() => {
