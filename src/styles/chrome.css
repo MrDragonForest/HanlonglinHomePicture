@@ -1,0 +1,314 @@
+/* ===========================================================================
+   页面外挂件：主题切换、音乐控件、页脚
+   =========================================================================== */
+
+/* ===================== 主题切换 ===================== */
+
+.theme-switch {
+  position: fixed;
+  top: clamp(14px, 2.4vh, 26px);
+  right: clamp(14px, 2.6vw, 32px);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: var(--shadow-float);
+  color: var(--text-soft);
+  transition: border-color var(--dur-fast) var(--ease-soft),
+    color var(--dur-fast) var(--ease-soft), var(--theme-transition);
+}
+
+.theme-switch:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.theme-switch__glyphs {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.theme-switch__sun,
+.theme-switch__moon {
+  transition: opacity var(--dur-base) var(--ease-soft),
+    color var(--dur-base) var(--ease-soft);
+}
+
+/* 当前主题对应的图标高亮，另一个淡出 */
+:root[data-theme='warm'] .theme-switch__sun {
+  color: var(--accent);
+  opacity: 1;
+}
+
+:root[data-theme='warm'] .theme-switch__moon {
+  opacity: 0.32;
+}
+
+:root[data-theme='night'] .theme-switch__moon {
+  color: var(--accent);
+  opacity: 1;
+}
+
+:root[data-theme='night'] .theme-switch__sun {
+  opacity: 0.32;
+}
+
+/* 会滑动的小指示条 */
+.theme-switch__track {
+  position: relative;
+  width: 30px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.theme-switch__thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  translate: 0 -50%;
+  transition: left var(--dur-page) var(--ease-out),
+    background-color var(--dur-page) var(--ease-soft);
+}
+
+.theme-switch__thumb[data-night='true'] {
+  left: 17px;
+}
+
+@media (max-width: 620px) {
+  .theme-switch__track {
+    display: none;
+  }
+}
+
+/* ===================== 音乐控件 ===================== */
+
+.music {
+  position: fixed;
+  right: clamp(14px, 2.6vw, 32px);
+  bottom: max(clamp(14px, 2.6vh, 30px), env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.music__panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 42px;
+  max-width: 0;
+  margin-right: -42px;
+  padding-left: 0;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-right: 0;
+  border-radius: 999px 0 0 999px;
+  background: var(--surface);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  opacity: 0;
+  transition: max-width var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-soft),
+    padding-left var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-soft);
+}
+
+/* 悬停或键盘聚焦时展开 */
+.music:hover .music__panel,
+.music:focus-within .music__panel {
+  max-width: 260px;
+  padding-left: 18px;
+  border-color: var(--line);
+  opacity: 1;
+}
+
+.music__name {
+  flex: none;
+  max-width: 108px;
+  overflow: hidden;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-soft);
+}
+
+.music__volume {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.music__volume input[type='range'] {
+  width: 74px;
+  height: 16px;
+  appearance: none;
+  background: none;
+  cursor: pointer;
+}
+
+.music__volume input[type='range']::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+
+.music__volume input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 9px;
+  height: 9px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.music__volume input[type='range']::-moz-range-track {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+
+.music__volume input[type='range']::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.music__skip {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--text-faint);
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.music__skip:hover {
+  color: var(--text);
+}
+
+.music__button {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface-solid);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: var(--shadow-float);
+  color: var(--text-soft);
+  transition: color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft);
+}
+
+.music__button:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.music__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* 播放时一圈缓慢呼吸的光晕 */
+.music__halo {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-soft);
+}
+
+.music[data-playing='true'] .music__halo {
+  opacity: 1;
+  animation: music-breathe 3.2s var(--ease-soft) infinite;
+}
+
+.music[data-playing='true'] .music__button {
+  color: var(--accent);
+}
+
+@keyframes music-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.32);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music[data-playing='true'] .music__halo {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* 触屏上不展开面板（没有悬停），只保留播放按钮 */
+@media (hover: none) {
+  .music__panel {
+    display: none;
+  }
+}
+
+/* ===================== 页脚 ===================== */
+
+.foot {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(40px, 8vh, 96px) clamp(70px, 12vh, 130px);
+}
+
+.foot__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: clamp(22px, 3vh, 36px);
+  border-top: 1px solid var(--line);
+}
+
+.foot__sign {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-style: italic;
+  letter-spacing: 0.14em;
+  color: var(--text-soft);
+}
+
+.foot__link {
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+
+.foot__link:hover {
+  color: var(--accent);
+}

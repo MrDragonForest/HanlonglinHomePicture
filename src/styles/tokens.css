@@ -1,0 +1,131 @@
+/* ===========================================================================
+   设计变量
+   两套主题：warm（胶片暖阳）/ night（夜色烛光）
+   =========================================================================== */
+
+:root {
+  /* --- 排版 --- */
+  --font-display: 'Cormorant Garamond', 'Songti SC', 'Source Han Serif SC',
+    'Noto Serif SC', 'STSong', 'SimSun', serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+
+  --fs-hero: clamp(2.6rem, 9vw, 6.5rem);
+  --fs-h2: clamp(1.35rem, 3.2vw, 2.1rem);
+  --fs-body: clamp(0.94rem, 1.6vw, 1.03rem);
+  --fs-small: 0.8rem;
+  --fs-micro: 0.7rem;
+
+  --tracking-hero: 0.06em;
+  --tracking-label: 0.34em;
+  --tracking-body: 0.01em;
+
+  /* --- 节奏 --- */
+  --gap: clamp(14px, 1.8vw, 26px);
+  --gutter: clamp(20px, 5vw, 72px);
+  --shell: 1560px;
+  --radius: 3px;
+  --radius-lg: 6px;
+
+  /* --- 动效 --- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 220ms;
+  --dur-base: 420ms;
+  --dur-page: 640ms;
+  --dur-slow: 1100ms;
+
+  /* --- 胶片颗粒 --- */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* --- 主题切换时的过渡 --- */
+  --theme-transition: background-color var(--dur-page) var(--ease-soft),
+    color var(--dur-page) var(--ease-soft),
+    border-color var(--dur-page) var(--ease-soft);
+}
+
+/* --- 胶片暖阳 --- */
+:root[data-theme='warm'] {
+  color-scheme: light;
+
+  --bg: #fbf7f1;
+  --bg-deep: #f3ece1;
+  --bg-elev: #fffdf9;
+
+  --text: #3a2e24;
+  --text-soft: #7a6a59;
+  --text-faint: #a99883;
+
+  --accent: #c8a063;
+  --accent-soft: #e8a87c;
+  --accent-wash: rgba(200, 160, 99, 0.1);
+
+  --line: rgba(58, 46, 36, 0.11);
+  --line-strong: rgba(58, 46, 36, 0.22);
+
+  --surface: rgba(255, 253, 249, 0.72);
+  --surface-solid: #fffdf9;
+
+  --scrim: rgba(37, 27, 19, 0.9);
+  --scrim-soft: rgba(37, 27, 19, 0.42);
+
+  --shadow-tile: 0 1px 2px rgba(90, 68, 45, 0.06),
+    0 18px 46px -22px rgba(90, 68, 45, 0.34);
+  --shadow-tile-hover: 0 2px 4px rgba(90, 68, 45, 0.07),
+    0 30px 68px -24px rgba(90, 68, 45, 0.42);
+  --shadow-float: 0 10px 34px -12px rgba(90, 68, 45, 0.3);
+
+  --grain-opacity: 0.34;
+  --grain-blend: multiply;
+
+  /* 开场区的柔和光晕 */
+  --glow-1: rgba(232, 168, 124, 0.4);
+  --glow-2: rgba(200, 160, 99, 0.24);
+  --glow-3: rgba(255, 253, 249, 0);
+}
+
+/* --- 夜色烛光 --- */
+:root[data-theme='night'] {
+  color-scheme: dark;
+
+  --bg: #14100e;
+  --bg-deep: #0d0a08;
+  --bg-elev: #1d1815;
+
+  --text: #f0e6da;
+  --text-soft: #b5a492;
+  --text-faint: #7c6b5b;
+
+  --accent: #d9bc8c;
+  --accent-soft: #8c6b4f;
+  --accent-wash: rgba(217, 188, 140, 0.09);
+
+  --line: rgba(240, 230, 218, 0.13);
+  --line-strong: rgba(240, 230, 218, 0.26);
+
+  --surface: rgba(29, 24, 21, 0.7);
+  --surface-solid: #1d1815;
+
+  --scrim: rgba(9, 6, 5, 0.92);
+  --scrim-soft: rgba(9, 6, 5, 0.5);
+
+  --shadow-tile: 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 22px 54px -24px rgba(0, 0, 0, 0.9);
+  --shadow-tile-hover: 0 2px 5px rgba(0, 0, 0, 0.55),
+    0 36px 78px -26px rgba(0, 0, 0, 0.95);
+  --shadow-float: 0 12px 38px -12px rgba(0, 0, 0, 0.75);
+
+  --grain-opacity: 0.22;
+  --grain-blend: screen;
+
+  --glow-1: rgba(140, 107, 79, 0.42);
+  --glow-2: rgba(217, 188, 140, 0.16);
+  --glow-3: rgba(20, 16, 14, 0);
+}
+
+/* 不支持的浏览器兜底：跟随系统 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+  }
+}

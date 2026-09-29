@@ -1,0 +1,297 @@
+/* ===========================================================================
+   全屏查看器
+   =========================================================================== */
+
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  color: var(--text);
+}
+
+.viewer__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  backdrop-filter: blur(22px) saturate(115%);
+  -webkit-backdrop-filter: blur(22px) saturate(115%);
+}
+
+/* --- 顶栏 --- */
+.viewer__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(14px, 2.4vh, 26px) clamp(16px, 3vw, 40px);
+}
+
+.viewer__counter {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  letter-spacing: 0.1em;
+  color: var(--text);
+}
+
+.viewer__bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.viewer__counter-total {
+  color: var(--text-faint);
+}
+
+.viewer__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: var(--fs-small);
+  letter-spacing: 0.16em;
+  transition: color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft),
+    background-color var(--dur-fast) var(--ease-soft);
+}
+
+.viewer__close:hover {
+  border-color: var(--line-strong);
+  background: var(--accent-wash);
+  color: var(--text);
+}
+
+.viewer__close-text {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .viewer__close-text {
+    display: inline;
+  }
+}
+
+/* --- 舞台 --- */
+.viewer__stage {
+  position: relative;
+  min-height: 0;
+  /* 关掉浏览器默认手势，横向滑动才由我们自己处理 */
+  touch-action: none;
+}
+
+.viewer__frame {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-tile-hover);
+  will-change: transform;
+}
+
+/* 翻页时照片在外框里滑动，由外框裁切 */
+.viewer__slide {
+  position: absolute;
+  inset: 0;
+}
+
+.viewer__frame .smart__full {
+  /* 外框已经是精确比例，contain 和 cover 等价，用 contain 更保险 */
+  object-fit: contain;
+}
+
+/* --- 左右翻页热区 --- */
+.viewer__nav {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-soft);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-soft),
+    color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft),
+    background-color var(--dur-fast) var(--ease-soft);
+}
+
+.viewer__nav--prev {
+  left: clamp(10px, 2.2vw, 34px);
+}
+
+.viewer__nav--next {
+  right: clamp(10px, 2.2vw, 34px);
+}
+
+.viewer__nav:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--text);
+}
+
+.viewer__nav:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 鼠标移到舞台上才浮出翻页按钮，平时保持画面干净 */
+@media (hover: hover) and (pointer: fine) {
+  .viewer__stage:hover .viewer__nav:not(:disabled) {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .viewer__nav {
+    display: none;
+  }
+}
+
+/* --- 底栏 --- */
+.viewer__foot {
+  position: relative;
+  display: grid;
+  gap: clamp(12px, 2vh, 20px);
+  padding: clamp(16px, 2.6vh, 28px) clamp(16px, 3vw, 40px)
+    max(clamp(16px, 2.6vh, 28px), env(safe-area-inset-bottom));
+}
+
+.viewer__info {
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+  margin-inline: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.viewer__title {
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+.viewer__caption {
+  color: var(--text-soft);
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+
+.viewer__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: var(--fs-small);
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.viewer__facts-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+/* --- 胶片条 --- */
+.strip {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  /* 两端淡出，暗示可以横向滚动 */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+.strip__track {
+  display: flex;
+  gap: 8px;
+  width: max-content;
+  padding: 4px;
+  margin-inline: auto;
+}
+
+.strip__item {
+  position: relative;
+  flex: none;
+  width: clamp(42px, 6.4vw, 62px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  opacity: 0.42;
+  filter: saturate(0.7);
+  transition: opacity var(--dur-base) var(--ease-soft),
+    filter var(--dur-base) var(--ease-soft),
+    outline-color var(--dur-base) var(--ease-soft);
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+}
+
+.strip__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.strip__item:hover {
+  opacity: 0.78;
+  filter: none;
+}
+
+.strip__item[data-active='true'] {
+  opacity: 1;
+  filter: none;
+  outline-color: var(--accent);
+}
+
+/* --- 沉浸/信息切换 --- */
+.viewer__toggle {
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-faint);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.2em;
+  transition: color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft);
+}
+
+.viewer__toggle:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}

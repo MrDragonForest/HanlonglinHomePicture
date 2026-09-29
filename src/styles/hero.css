@@ -1,0 +1,164 @@
+/* ===========================================================================
+   开场区
+   =========================================================================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding-block: clamp(90px, 16vh, 180px) clamp(110px, 18vh, 190px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 柔和光晕，缓慢呼吸 */
+.hero__glow {
+  position: absolute;
+  inset: -25% -15%;
+  z-index: -1;
+  background:
+    radial-gradient(40% 44% at 26% 28%, var(--glow-1), transparent 70%),
+    radial-gradient(36% 40% at 78% 70%, var(--glow-2), transparent 72%);
+  filter: blur(34px);
+  animation: hero-breathe 22s var(--ease-soft) infinite;
+}
+
+@keyframes hero-breathe {
+  0%,
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.08) translate3d(-1.6%, 1.4%, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__glow {
+    animation: none;
+  }
+}
+
+.hero__inner {
+  display: grid;
+  justify-items: center;
+  gap: clamp(16px, 2.6vh, 30px);
+  text-align: center;
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+}
+
+.hero__eyebrow-line {
+  width: clamp(26px, 6vw, 70px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong));
+}
+
+.hero__eyebrow-line:last-child {
+  background: linear-gradient(to left, transparent, var(--line-strong));
+}
+
+.hero__title {
+  font-size: var(--fs-hero);
+  font-weight: 300;
+  letter-spacing: var(--tracking-hero);
+  color: var(--text);
+  text-wrap: balance;
+  /* 极淡的暖色投影，让标题浮起来 */
+  text-shadow: 0 1px 40px var(--accent-wash);
+}
+
+.hero__subtitle {
+  max-width: 26ch;
+  color: var(--text-soft);
+  font-size: clamp(0.95rem, 1.7vw, 1.14rem);
+  letter-spacing: 0.08em;
+  line-height: 2;
+  text-wrap: balance;
+}
+
+.hero__subtitle-tail {
+  white-space: nowrap;
+}
+
+.hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(6px, 1.4vh, 16px);
+}
+
+.hero__meta-item {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+
+.hero__meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* --- 滚动提示 --- */
+.hero__cue {
+  position: absolute;
+  bottom: clamp(26px, 5vh, 54px);
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.hero__cue-text {
+  font-size: var(--fs-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+}
+
+.hero__cue-line {
+  position: relative;
+  width: 1px;
+  height: clamp(38px, 7vh, 70px);
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--line-strong), transparent);
+}
+
+/* 一道光从上往下滑过 */
+.hero__cue-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--accent));
+  animation: cue-run 2.8s var(--ease-soft) infinite;
+}
+
+@keyframes cue-run {
+  0% {
+    transform: translateY(-100%);
+  }
+  55%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue-line::after {
+    animation: none;
+  }
+}
