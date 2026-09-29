@@ -97,18 +97,26 @@ key 就是照片 id（`日期/文件名`）。两个脚本都**不会覆盖**这
 
 仓库里已经带好 `.github/workflows/deploy.yml`，推到 `main` 就会自动构建并发布。
 
-1. 建一个 GitHub 仓库，把代码推上去：
+1. 关联远端并推送：
 
    ```bash
-   git init
+   git init -b main
    git add .
-   git commit -m "init"
-   git branch -M main
-   git remote add origin git@github.com:<用户名>/<仓库名>.git
+   git commit -m "初始化生活相册站点"
+   git remote add origin https://github.com/<用户名>/<仓库名>.git
    git push -u origin main
    ```
 
-2. 在仓库 **Settings → Pages → Source** 里选 **GitHub Actions**（只需要设这一次）。
+   首次推送会提示输入用户名和密码 —— 密码位置填 **Personal Access Token**（fine-grained，权限只给该仓库的 `Contents: Read and write`；classic 则勾 `repo`）。macOS 会把凭据存进钥匙串，之后不用再输。
+
+   如果建仓库时勾了「Add a README」，远端已有一个提交，直接推会被拒。先合并再接上：
+
+   ```bash
+   git pull --rebase origin main
+   git push -u origin main
+   ```
+
+2. 仓库需要是**公开**的 —— GitHub Free 不支持从私有仓库发布 Pages。若还没开 Pages，工作流里的 `configure-pages` 会自动把它启用并设为 GitHub Actions 源，一般不用手动设置（必要时也可自己去 **Settings → Pages → Source** 选 **GitHub Actions**）。
 3. 等 Actions 跑完，站点地址：
 
    - 普通仓库（项目页）：`https://<用户名>.github.io/<仓库名>/`
